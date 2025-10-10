@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Oak&Sole.co — About</title>
+  <style>
+    body { font-family: Inter, sans-serif; margin: 0; background: #fff; color: #333; }
+    header { background: #fff; border-bottom: 1px solid #ddd; padding: 12px 24px; position: sticky; top: 0; z-index: 1000; }
+    header .container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    header img { height: 60px; }
+    nav a { color: #333; margin-left: 18px; text-decoration: none; font-weight: 500; }
+    nav a:hover { color: #a47148; }
+    .about { max-width: 900px; margin: 50px auto; padding: 20px; }
+    footer { text-align: center; padding: 28px 0; margin-top: 40px; color: #777; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <img src="logo.jpg" alt="Oak&Sole.co Logo">
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html" style="font-size:20px;">🛒</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="about">
+    <h1>About Oak&Sole.co</h1>
+    <p>At Oak&Sole.co, we specialize in one thing — Timberlands. The world’s most iconic boot deserves its own kingdom. From the classic 6-inch wheat nubuck boot to exclusive limited-edition colorways, we are your go-to destination for everything Timberland.</p>
+    <p>Our goal is to bring authentic Timberlands to South Africa, ensuring every pair combines rugged durability with unmatched style.</p>
+  </section>
+
+  <footer>
+    <small>© <span id="year"></span> Oak&Sole.co • All rights reserved</small>
+  </footer>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

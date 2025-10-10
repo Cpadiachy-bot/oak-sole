@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shop — Oak&Sole.co</title>
+  <style>
+    :root {
+      --accent: #a47148; /* light brown */
+      --bg: #ffffff;
+      --text: #333333;
+    }
+
+    body {
+      font-family: Inter, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--bg);
+      border-bottom: 1px solid #ddd;
+      padding: 12px 24px;
+    }
+
+    header .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    nav a {
+      margin-left: 18px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* Product grid layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+      padding: 10px;
+    }
+
+    /* Product card */
+    .card {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    /* Product images on grid */
+    .card img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h3 {
+      font-size: 16px;
+      margin-top: 8px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: gray;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: white;
+      color: #333;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      text-align: center;
+    }
+
+    /* smaller modal image */
+    .modal-content img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    select,
+    .btn {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <img src="logo.jpg" alt="Oak&Sole.co Logo">
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html" style="font-size:20px;">🛒</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h2>Shop Timberlands</h2>
+    <div class="grid" id="product-grid"></div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal" id="product-modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="modal-img" src="" alt="">
+      <h3 id="modal-name"></h3>
+      <p id="modal-price"></p>
+      <label for="size">Select Size</label>
+      <select id="modal-size">
+        <option value="">Choose size</option>
+        <option>UK 6</option>
+        <option>UK 7</option>
+        <option>UK 8</option>
+        <option>UK 9</option>
+        <option>UK 10</option>
+      </select>
+      <button class="btn" onclick="addToCart()">Add to Cart</button>
+    </div>
+  </div>
+
+  <script>
+    const products = [
+      { id: 1, name: "Classic 6-Inch Wheat Boot", price: 3200, img: "1.jpg" },
+      { id: 2, name: "Black Premium Boot", price: 3500, img: "2.jpg" },
+      { id: 3, name: "Grey Nubuck Boot", price: 3400, img: "3.jpg" },
+      { id: 4, name: "Dark Brown Heritage Boot", price: 3600, img: "4.jpg" },
+      { id: 5, name: "Waterproof Outdoor Boot", price: 3700, img: "5.jpg" },
+    ];
+
+    const grid = document.getElementById("product-grid");
+    const modal = document.getElementById("product-modal");
+    let currentProduct = null;
+
+    // Render products
+    products.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p>R ${p.price}</p>
+      `;
+      card.onclick = () => openModal(p);
+      grid.appendChild(card);
+    });
+
+    function openModal(product) {
+      currentProduct = product;
+      document.getElementById("modal-img").src = product.img;
+      document.getElementById("modal-name").textContent = product.name;
+      document.getElementById("modal-price").textContent = "R " + product.price;
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
+    function addToCart() {
+      const size = document.getElementById("modal-size").value;
+      if (!size) {
+        alert("Please select a size.");
+        return;
+      }
+
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(item => item.id === currentProduct.id && item.size === size);
+
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ ...currentProduct, size: size, quantity: 1 });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(currentProduct.name + " (Size " + size + ") added to cart.");
+      closeModal();
+    }
+
+    // Close modal on outside click
+    window.onclick = (e) => {
+      if (e.target === modal) closeModal();
+    };
+  </script>
+</body>
+</html>
+
+
+
+
+

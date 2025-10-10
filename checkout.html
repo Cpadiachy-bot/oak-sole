@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout — Oak&Sole.co</title>
+  <style>
+    :root {
+      --accent: #a47148;
+      --bg: #ffffff;
+      --text: #333333;
+      --muted: #777777;
+    }
+    body {
+      font-family: Inter, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      background: var(--bg);
+      border-bottom: 1px solid #ddd;
+      padding: 12px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      height: 60px;
+    }
+    nav a {
+      color: var(--text);
+      margin-left: 18px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .summary {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+    .summary h3 {
+      margin-top: 0;
+    }
+    .summary p {
+      margin: 8px 0;
+    }
+    .btn {
+      background: var(--accent);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .btn:hover {
+      opacity: 0.9;
+    }
+    footer {
+      text-align: center;
+      padding: 28px 0;
+      margin-top: 40px;
+      color: var(--muted);
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <img src="logo.jpg" alt="Oak&Sole.co Logo">
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html" style="font-size:20px;">🛒</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h2>Checkout</h2>
+
+    <div class="summary">
+      <h3>Order Summary</h3>
+      <p id="order-items">Loading your items...</p>
+      <p><strong>Subtotal: R <span id="subtotal">0</span></strong></p>
+    </div>
+
+    <button class="btn" onclick="proceedToShipping()">Proceed to Shipping</button>
+  </main>
+
+  <footer>
+    <small>© <span id="year"></span> Oak&Sole.co • All rights reserved</small>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Load cart from localStorage
+    function loadOrderSummary() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const orderItems = document.getElementById("order-items");
+      const subtotalEl = document.getElementById("subtotal");
+
+      if (cart.length === 0) {
+        orderItems.textContent = "Your cart is empty.";
+        subtotalEl.textContent = "0";
+        return;
+      }
+
+      let subtotal = 0;
+      orderItems.innerHTML = "";
+      cart.forEach(item => {
+        const line = document.createElement("p");
+        line.textContent = `${item.name} (x${item.quantity}) — R ${item.price * item.quantity}`;
+        orderItems.appendChild(line);
+        subtotal += item.price * item.quantity;
+      });
+
+      subtotalEl.textContent = subtotal;
+    }
+
+    function proceedToShipping() {
+      window.location.href = "shipping.html";
+    }
+
+    loadOrderSummary();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cart — Oak&Sole.co</title>
+  <style>
+    :root {
+      --accent: #a47148;
+      --bg: #ffffff;
+      --text: #333333;
+    }
+    body {font-family: Inter, sans-serif; margin:0; background:var(--bg); color:var(--text);}
+    header {background: var(--bg); border-bottom:1px solid #ddd; padding:12px 24px;}
+    header .container {max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:center;}
+    header img {height:60px;}
+    nav a {margin-left:18px; text-decoration:none; color:var(--text); font-weight:500;}
+    nav a:hover {color:var(--accent);}
+    main {max-width:1100px; margin:40px auto; padding:20px;}
+    table {width:100%; border-collapse:collapse;}
+    th, td {padding:12px; text-align:center; border-bottom:1px solid #ddd;}
+    th {background:var(--accent); color:white;}
+    .btn {padding:10px 16px; border:none; border-radius:8px; cursor:pointer; background:var(--accent); color:white; font-weight:600;}
+    .btn:hover {opacity:0.9;}
+    input[type="number"] {width:60px; padding:6px; border-radius:6px; border:1px solid #ddd;}
+    .total {text-align:right; margin-top:20px; font-size:18px; font-weight:600;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <img src="logo.jpg" alt="Oak&Sole.co Logo">
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html" style="font-size:20px;">🛒</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h2>Your Cart</h2>
+    <table id="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Size</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="total" id="cart-total"></div>
+    <button class="btn" onclick="checkout()">Proceed to Checkout</button>
+  </main>
+
+  <script>
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const tbody = document.querySelector("#cart-table tbody");
+      tbody.innerHTML = "";
+
+      let total = 0;
+      cart.forEach((item, index) => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.size}</td>
+          <td>R ${item.price}</td>
+          <td><input type="number" min="1" value="${item.quantity}" onchange="updateQty(${index}, this.value)"></td>
+          <td>R ${subtotal}</td>
+          <td><button class="btn" onclick="removeItem(${index})">Remove</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById("cart-total").textContent = "Total: R " + total;
+    }
+
+    function updateQty(index, qty) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart[index].quantity = parseInt(qty);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.splice(index,1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+
+    function checkout() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if(cart.length === 0){
+        alert("Your cart is empty.");
+        return;
+      }
+      // Redirect to checkout page
+      window.location.href = "checkout.html";
+    }
+
+    loadCart();
+  </script>
+</body>
+</html>
+
+
+
