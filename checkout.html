@@ -108,6 +108,9 @@
       <h3>Order Summary</h3>
       <p id="order-items">Loading your items...</p>
       <p><strong>Subtotal: R <span id="subtotal">0</span></strong></p>
+      <p>Shipping Fee: R <span id="shipping">200</span></p>
+      <hr>
+      <p><strong>Total: R <span id="total">0</span></strong></p>
     </div>
 
     <button class="btn" onclick="proceedToShipping()">Proceed to Shipping</button>
@@ -120,15 +123,19 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    const SHIPPING_FEE = 200;
+
     // Load cart from localStorage
     function loadOrderSummary() {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       const orderItems = document.getElementById("order-items");
       const subtotalEl = document.getElementById("subtotal");
+      const totalEl = document.getElementById("total");
 
       if (cart.length === 0) {
         orderItems.textContent = "Your cart is empty.";
         subtotalEl.textContent = "0";
+        totalEl.textContent = SHIPPING_FEE;
         return;
       }
 
@@ -141,7 +148,10 @@
         subtotal += item.price * item.quantity;
       });
 
+      const total = subtotal + SHIPPING_FEE;
+
       subtotalEl.textContent = subtotal;
+      totalEl.textContent = total;
     }
 
     function proceedToShipping() {
@@ -152,4 +162,3 @@
   </script>
 </body>
 </html>
-
