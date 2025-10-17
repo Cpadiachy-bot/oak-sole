@@ -71,6 +71,13 @@
       font-size: 16px;
       width: 100%;
     }
+    .fee-box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px;
+      font-weight: 600;
+    }
     .btn {
       background: var(--accent);
       color: white;
@@ -152,6 +159,20 @@
         <input type="text" id="phone" name="phone" required>
       </div>
 
+      <!-- 🚚 Shipping method and fee -->
+      <div>
+        <label for="shipping-method">Shipping Method</label>
+        <select id="shipping-method" name="shipping-method" required>
+          <option value="">Select shipping method</option>
+          <option value="Standard">Standard Shipping — R70</option>
+          <option value="Express">Express Shipping — R120</option>
+        </select>
+      </div>
+
+      <div class="fee-box">
+        Shipping Fee: <span id="shipping-fee">R0</span>
+      </div>
+
       <button type="submit" class="btn">Proceed to Payment</button>
     </form>
   </main>
@@ -163,8 +184,25 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    const shippingMethod = document.getElementById("shipping-method");
+    const feeDisplay = document.getElementById("shipping-fee");
+
+    const fees = {
+      "Standard": 70,
+      "Express": 120
+    };
+
+    shippingMethod.addEventListener("change", () => {
+      const method = shippingMethod.value;
+      const fee = fees[method] || 0;
+      feeDisplay.textContent = `R${fee}`;
+    });
+
     document.getElementById("shipping-form").addEventListener("submit", function(e) {
       e.preventDefault();
+
+      const method = shippingMethod.value;
+      const fee = fees[method] || 0;
 
       // Save shipping info to localStorage
       const shippingData = {
@@ -173,7 +211,9 @@
         city: document.getElementById("city").value,
         province: document.getElementById("province").value,
         postal: document.getElementById("postal").value,
-        phone: document.getElementById("phone").value
+        phone: document.getElementById("phone").value,
+        shippingMethod: method,
+        shippingFee: fee
       };
 
       localStorage.setItem("shipping", JSON.stringify(shippingData));
@@ -184,5 +224,3 @@
   </script>
 </body>
 </html>
-
-
